@@ -6,6 +6,29 @@ import pandas as pd
 
 # Set up OpenAI API key (store it securely in environment variables or Streamlit secrets)
 openai.api_key = st.secrets["OPENAI_API_KEY"]
+import os
+import subprocess
+import streamlit as st
+
+def download_ffmpeg():
+    # Download FFmpeg binary
+    url = "https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-i686-static.tar.xz"
+    ffmpeg_path = "/tmp/ffmpeg"
+    
+    if not os.path.exists(ffmpeg_path):
+        st.write("Downloading FFmpeg...")
+        subprocess.run(f"wget {url} -O ffmpeg.tar.xz", shell=True)
+        subprocess.run("tar -xf ffmpeg.tar.xz -C /tmp", shell=True)
+        subprocess.run("mv /tmp/ffmpeg*/ffmpeg /tmp/ffmpeg", shell=True)
+    
+    return ffmpeg_path
+
+def set_ffmpeg_env():
+    os.environ["PATH"] += os.pathsep + "/tmp"
+
+# Download FFmpeg and set the environment
+ffmpeg_path = download_ffmpeg()
+set_ffmpeg_env()
 
 # Function to transcribe the input video or audio file using Whisper
 def transcribe_file(file_path):
