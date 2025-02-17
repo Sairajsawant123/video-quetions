@@ -1,2 +1,2 @@
-git+https://github.com/openai/whisper.git
+openai-whisper
 openai==0.28.0
